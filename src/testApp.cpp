@@ -140,45 +140,60 @@ void testApp::debugDraw()
 {
 	const int debugWidth = VIDEO_WIDTH >> 1;
 	const int debugHeight = VIDEO_HEIGHT >> 1;
-	const int padding = 10;
+	const int padding = 12;
 
     // draw the incoming, the grayscale, the bg and the thresholded difference
 	ofSetHexColor(0xffffff);
 
 	int i = 0;
 	colorImg.draw(padding, padding + (i++) * (padding+debugHeight), debugWidth,debugHeight);
+	ofDrawBitmapString( "Color Img", padding, (i) * (padding+debugHeight) );
 	grayImage.draw(padding, padding + (i++) * (padding+debugHeight), debugWidth,debugHeight);
+	ofDrawBitmapString( "Gray Img", padding, (i) * (padding+debugHeight) );
 	grayBg.draw(padding, padding + (i++) * (padding+debugHeight), debugWidth,debugHeight);
+	ofDrawBitmapString( "Gray BG", padding, (i) * (padding+debugHeight) );
 	grayDiff.draw(padding, padding + (i++) * (padding+debugHeight), debugWidth,debugHeight);
+	ofDrawBitmapString( "Gray Diff", padding, (i) * (padding+debugHeight) );
     
 	// then draw the contours:
+
+	const int windowContourWidth = VIDEO_WIDTH;
+	const int windowContourHeight = VIDEO_HEIGHT;
+	const int windowContourX = padding * 2 + debugWidth;
+	const int windowContourY = padding;
     
 	ofFill();
 	ofSetHexColor(0x333333);
-	ofRect(360,540,320,240);
+	ofRect(windowContourX,windowContourY, windowContourWidth, windowContourHeight);
 	ofSetHexColor(0xffffff);
     
 	// we could draw the whole contour finder
-    //	contourFinder.draw(360,540);
+    //	contourFinder.draw(360,windowContourY);
     
 	// or, instead we can draw each blob individually from the blobs vector,
 	// this is how to get access to them:
-    for (int i = 0; i < contourFinder.nBlobs; i++){
-        contourFinder.blobs[i].draw(360,540);
+    for (int i = 0; i < contourFinder.nBlobs; ++i)
+	{
+        contourFinder.blobs[i].draw(windowContourX,windowContourY);
+
+		ofPoint circleCenter = ofPoint(
+			 contourFinder.blobs[i].centroid.x + windowContourX,
+             contourFinder.blobs[i].centroid.y + windowContourY
+		);
+
+		ofFill();
         ofSetColor(100,220,50);
-        ofFill();
-        ofCircle(
-                 contourFinder.blobs[i].centroid.x + 360,
-                 contourFinder.blobs[i].centroid.y + 540,
-                 10);
+        ofCircle(circleCenter, 8);
+		ofSetColor(0);
+		ofCircle(circleCenter, 2);
 		
 		// draw over the centroid if the blob is a hole
 		ofSetColor(255);
         ofNoFill();
 		if(contourFinder.blobs[i].hole){
 			ofDrawBitmapString("hole",
-                               contourFinder.blobs[i].boundingRect.getCenter().x + 360,
-                               contourFinder.blobs[i].boundingRect.getCenter().y + 540);
+                               contourFinder.blobs[i].boundingRect.getCenter().x + windowContourX,
+                               contourFinder.blobs[i].boundingRect.getCenter().y + windowContourY);
 		}
     }
     
@@ -190,7 +205,7 @@ void testApp::debugDraw()
     //			  << "press ' ' to capture bg" << endl
     //			  << "threshold " << threshold << " (press: +/-)" << endl
     << "num blobs found " << contourFinder.nBlobs << ", fps: " << ofGetFrameRate();
-	ofDrawBitmapString(reportStr.str(), 20, 600);
+	ofDrawBitmapString(reportStr.str(), windowContourX, windowContourY+windowContourHeight);
 }
 
 // GUI FUNCTIONS -----------------------------------------------
