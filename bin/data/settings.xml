@@ -7,6 +7,11 @@
 </Canvas>
 <Widget>
     <Kind>4</Kind>
+    <Name>SELECT CAM</Name>
+    <Value>0.630541861</Value>
+</Widget>
+<Widget>
+    <Kind>4</Kind>
     <Name>THRESHOLD</Name>
     <Value>3.940886736</Value>
 </Widget>
