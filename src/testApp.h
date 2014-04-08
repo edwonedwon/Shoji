@@ -31,7 +31,6 @@ class testApp : public ofBaseApp{
         void debugDraw();
     
         void mainUpdate();
-        void mainDraw();
     
         // GUI VARIABLES
         ofxUISuperCanvas *debugGUI;
@@ -39,15 +38,9 @@ class testApp : public ofBaseApp{
         void exit();
         void guiEvent(ofxUIEventArgs &e);
     
-        // QUAD WARP
-        ofxQuadWarp         warper;
-        ofImage             img;
-        ofFbo               fbo;
-        ofPoint             points[ 10 ];
-        void setupQuadWarp();
-        void drawQuadWarp();
-        void updateQuadWarp();
-    
+	private:
+		void setupGui();
+
 	private:
 
 		QuadSurface m_quadSurface;

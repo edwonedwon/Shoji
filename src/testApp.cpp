@@ -13,7 +13,6 @@ void testApp::setup()
     vidGrabber.initGrabber(VIDEO_WIDTH,VIDEO_HEIGHT);
 	vidGrabber.setDesiredFrameRate(SHOJI_FPS);
 
-
     colorImg.allocate(VIDEO_WIDTH,VIDEO_HEIGHT);
 	grayImage.allocate(VIDEO_WIDTH,VIDEO_HEIGHT);
 	grayBg.allocate(VIDEO_WIDTH,VIDEO_HEIGHT);
@@ -29,7 +28,14 @@ void testApp::setup()
     debug = true;
     showIR = true;
     
-    gui = new ofxUISuperCanvas("DEBUG");
+    setupGui();
+
+	m_quadSurface.setup();
+}
+
+void testApp::setupGui()
+{
+	gui = new ofxUISuperCanvas("DEBUG");
     gui->addToggle("DEBUG", &debug);
     gui->addToggle("INFRARED VIDEO", &showIR);
     gui->addToggle("QUAD", &showQuad);
@@ -45,31 +51,6 @@ void testApp::setup()
     debugGUI->autoSizeToFitWidgets();
     ofAddListener(debugGUI->newGUIEvent, this, &testApp::guiEvent);
     debugGUI->loadSettings("settings.xml");
-
-    setupQuadWarp();
-
-	m_quadSurface.setup();
-}
-
-void testApp::setupQuadWarp()
-{
-    showQuad = true;
-    
-    img.loadImage( "quad_warp_kittens.png" );
-    
-    int x = ( ofGetWidth()  - img.width  ) * 0.5;   // center on screen.
-    int y = ( ofGetHeight() - img.height ) * 0.5;   // center on screen.
-    int w = img.width;
-    int h = img.height;
-    
-    fbo.allocate( w, h );
-    
-    warper.setSourceRect( ofRectangle( 0, 0, w, h ) );              // this is the source rectangle which is the size of the image and located at ( 0, 0 )
-    warper.setTopLeftCornerPosition( ofPoint( x, y ) );             // this is position of the quad warp corners, centering the image on the screen.
-    warper.setTopRightCornerPosition( ofPoint( x + w, y ) );        // this is position of the quad warp corners, centering the image on the screen.
-    warper.setBottomLeftCornerPosition( ofPoint( x, y + h ) );      // this is position of the quad warp corners, centering the image on the screen.
-    warper.setBottomRightCornerPosition( ofPoint( x + w, y + h ) ); // this is position of the quad warp corners, centering the image on the screen.
-    warper.setup();
 }
 
 // UPDATE --------------------------------------------------------------
@@ -112,20 +93,8 @@ void testApp::mainUpdate()
     blobsTotal = (int)blobsTotalFloat;
 
 	m_quadSurface.update( contourFinder );
-                                                
-    updateQuadWarp();
 }
 
-void testApp::updateQuadWarp()
-{
-    for( int i=0; i<contourFinder.nBlobs; i++)
-    {
-        ofPoint corner;
-        corner.x = ofMap(contourFinder.blobs[i].centroid.x, 0, 320, 0, ofGetWidth());
-        corner.y = ofMap(contourFinder.blobs[i].centroid.y, 0, 240, 0, ofGetHeight());
-        warper.setCorner(corner, i);
-    }
-}
 
 void testApp::debugUpdate()
 {
@@ -136,79 +105,8 @@ void testApp::draw()
 {
     if (debug == true)
         debugDraw();
-    else
-        mainDraw();
 
 	m_quadSurface.draw();
-}
-
-void testApp::mainDraw()
-{
-    // draw the video
-    if (showIR == true)
-    {
-        ofSetColor(255, 255, 255);
-        grayDiff.draw(0, 0, (float)ofGetWidth(), (float)ofGetHeight());
-    }
-    
-    // set the circle parameters
-    ofSetColor(255, 100, 50);
-    ofFill();
-    
-    // draw the circle that tracks to the light
-    for (int i = 0; i < contourFinder.nBlobs; i++)
-    {
-        float x = ofMap(contourFinder.blobs[i].centroid.x, 0, 320, 0, ofGetWidth());
-        float y = ofMap(contourFinder.blobs[i].centroid.y, 0, 240, 0, ofGetHeight());
-    
-        ofCircle(x,y, 30);
-    }
-    
-    // set the rectangle params
-    ofSetColor(100,255,57);
-    ofFill();
-    
-    if (showQuad)
-        drawQuadWarp();
-}
-
-void testApp::drawQuadWarp()
-{
-    ofSetColor( ofColor :: white );
-    
-    //======================== draw image into fbo.
-    
-    fbo.begin();
-    {
-        img.draw( 0, 0 );
-    }
-    fbo.end();
-    
-    //======================== get our quad warp matrix.
-    
-    ofMatrix4x4 mat = warper.getMatrix();
-    
-    //======================== use the matrix to transform our fbo.
-    
-    glPushMatrix();
-    glMultMatrixf( mat.getPtr() );
-    {
-        fbo.draw( 0, 0 );
-    }
-    glPopMatrix();
-    
-
-    //======================== draw quad warp ui.
-    
-    ofSetColor( ofColor :: magenta );
-    warper.draw();
-    
-    //======================== info.
-    
-    ofSetColor( ofColor :: white );
-    ofDrawBitmapString( "to warp the image, drag the corners of the image.", 20, 30 );
-    ofDrawBitmapString( "press 's' to toggle quad warp UI. this will also disable quad warp interaction.", 20, 50 );
-
 }
 
 void testApp::debugDraw()
@@ -304,9 +202,6 @@ void testApp::keyPressed(int key)
 			if (threshold < 0) threshold = 0;
 			break;
 	}
-    
-    if( key == 's' )
-        warper.toggleShow();
 }
 
 //--------------------------------------------------------------
