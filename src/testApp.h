@@ -8,8 +8,8 @@
 #include "QuadSurface.h"
 #include "ShojiDrawer.h"
 
-class testApp : public ofBaseApp{
-
+class testApp : public ofBaseApp
+{
 	public:
 		void setup();
 		void update();
@@ -30,9 +30,6 @@ class testApp : public ofBaseApp{
     
         void mainUpdate();
     
-        // GUI VARIABLES
-        ofxUISuperCanvas *debugGUI;
-        ofxUISuperCanvas *gui;
         void exit();
         void guiEvent(ofxUIEventArgs &e);
     
@@ -41,6 +38,10 @@ class testApp : public ofBaseApp{
 		void setupCamera( int a_id );
 
 	private:
+
+		// gui
+		ofxUISuperCanvas *debugGUI;
+        ofxUISuperCanvas *gui;
 
 		int m_camId;
 		int m_camRequestedId;
@@ -51,7 +52,6 @@ class testApp : public ofBaseApp{
 		ofVideoGrabber 		vidGrabber;
 
         ofxCvColorImage			colorImg;
-
         ofxCvGrayscaleImage 	grayImage;
 		ofxCvGrayscaleImage 	grayBg;
 		ofxCvGrayscaleImage 	grayDiff;
@@ -60,14 +60,9 @@ class testApp : public ofBaseApp{
 
 		bool				m_drawMask;
         bool                debug;
-        bool                showIR;
-        bool                showQuad;
 		int 				threshold;
-        float               thresholdFloat;
         int                 blobsTotal;
 		bool				bLearnBakground;
         float               minBlobSize;
-
-
 };
 

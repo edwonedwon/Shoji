@@ -25,7 +25,6 @@ void testApp::setup()
     // DEBUG GUI SWITCH
 	m_drawMask = true;
     debug = true;
-    showIR = true;
     
     setupGui();
 
@@ -49,21 +48,20 @@ void testApp::setupCamera( int a_id )
 
 void testApp::setupGui()
 {
-	gui = new ofxUISuperCanvas("DEBUG");
-    gui->addToggle("DEBUG", &debug);
-    gui->addToggle("INFRARED VIDEO", &showIR);
-    gui->addToggle("QUAD", &showQuad);
-	gui->addIntSlider("CAM ID", 0, vidGrabber.listDevices().size()-1, &m_camRequestedId );
+	// camera
+	gui = new ofxUISuperCanvas("Camera");
+    gui->addToggle("Show Camera Debug", &debug);
+	gui->addIntSlider("Select Camera ID", 0, vidGrabber.listDevices().size()-1, &m_camRequestedId );
     gui->autoSizeToFitWidgets();
     
-    // DEBUG GUI
-    debugGUI = new ofxUISuperCanvas("BLOBS");
+    // blobs gui
+    debugGUI = new ofxUISuperCanvas("Blobs");
     debugGUI->addSpacer();
 	debugGUI->addToggle("Draw Quad Mask", &m_drawMask);
-    debugGUI->addSlider("THRESHOLD", 0.0, 100, &thresholdFloat);
-	debugGUI->addIntSlider("BLOBS", 0, 4, &blobsTotal);
-    debugGUI->addSlider("MIN BLOB SIZE", 0.1, 20, &minBlobSize);
-    debugGUI->addToggle("FULLSCREEN", false);
+    debugGUI->addIntSlider("Threshold", 0, 100, &threshold);
+	debugGUI->addIntSlider("Num Blobs", 0, 4, &blobsTotal);
+    debugGUI->addSlider("Min Blob Size", 0.1, 20, &minBlobSize);
+    debugGUI->addToggle("FullScreen", false);
     debugGUI->autoSizeToFitWidgets();
     ofAddListener(debugGUI->newGUIEvent, this, &testApp::guiEvent);
     debugGUI->loadSettings("settings.xml");
@@ -108,10 +106,6 @@ void testApp::mainUpdate()
         // also, find holes is set to true so we will get interior contours as well....
         contourFinder.findContours(grayDiff, minBlobSize, (340*240)/3, blobsTotal, true);	// find holes
 	}
-    
-    
-    // GUI STUFF
-    threshold = (int)thresholdFloat;
 
 	m_quadSurface.update( contourFinder );
 }
