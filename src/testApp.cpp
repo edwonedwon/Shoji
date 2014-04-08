@@ -19,7 +19,7 @@ void testApp::setup()
 
 	bLearnBakground = true;
 	threshold = 80;
-    blobsTotal = 4;
+	blobsTotal = SHOJI_NUM_BLOBS;
     minBlobSize = 5;
     
     // DEBUG GUI SWITCH

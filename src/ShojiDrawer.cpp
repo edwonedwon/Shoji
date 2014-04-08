@@ -40,4 +40,6 @@ void ShojiDrawer::draw( const QuadSurface & a_quadSurface )
 			ofLine( x_0, y_0, x_1, y_1 );
 		}
 	}
+
+	ofSetLineWidth(1.0f);
 }
