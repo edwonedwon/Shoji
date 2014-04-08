@@ -6,6 +6,7 @@
 #include "ofxQuadWarp.h"
 
 #include "QuadSurface.h"
+#include "ShojiDrawer.h"
 
 class testApp : public ofBaseApp{
 
@@ -41,6 +42,7 @@ class testApp : public ofBaseApp{
 	private:
 
 		QuadSurface m_quadSurface;
+		ShojiDrawer m_shojiDrawer;
 
 		ofVideoGrabber 		vidGrabber;
 

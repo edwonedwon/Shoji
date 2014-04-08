@@ -6,6 +6,7 @@ void QuadSurface::update( ofxCvContourFinder & a_contour )
 	if ( a_contour.nBlobs != SHOJI_NUM_BLOBS )
 		return;
 
+	// extract points from shoji
 	for( int i=0; i < SHOJI_NUM_BLOBS; i++)
     {
         ofPoint corner;
@@ -21,7 +22,7 @@ void QuadSurface::update( ofxCvContourFinder & a_contour )
 
 void QuadSurface::sortPoints()
 {
-	// calculate center
+	// calculate center, render out radians compared to center
 	float radians[ SHOJI_NUM_BLOBS];
 	const ofVec3f center = GetCenterPos();
 
@@ -31,8 +32,7 @@ void QuadSurface::sortPoints()
 		radians[i] = atan2f( diff.y, diff.x );
     }
 
-
-	// sort by radians
+	// sort pts by radians
 	for( int i = 0; i < SHOJI_NUM_BLOBS-1; ++i )
     {
 		for( int j = i+1; j < SHOJI_NUM_BLOBS; ++j )

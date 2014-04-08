@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ofxOpenCv.h"
-#include "ofxQuadWarp.h"
 
 #include "ShojiDefines.h"
 
@@ -14,8 +13,7 @@ class QuadSurface
 		void update( ofxCvContourFinder & a_contour );
 
 		ofPoint GetCenterPos() const;
-
-		ofxQuadWarp & GetQuadWarp() { return m_warper; }
+		ofVec3f GetPt( int a_index ) const { return m_pos[a_index]; }
 
 	private:
 		void sortPoints();
@@ -23,7 +21,5 @@ class QuadSurface
 	private:
 
 		ofVec3f m_pos[SHOJI_NUM_BLOBS];
-		ofxQuadWarp m_warper;
-
 
 };

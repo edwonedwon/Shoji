@@ -106,6 +106,7 @@ void testApp::draw()
     if (debug == true)
         debugDraw();
 
+	m_shojiDrawer.draw( m_quadSurface );
 	m_quadSurface.draw();
 }
 
