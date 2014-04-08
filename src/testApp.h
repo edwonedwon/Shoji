@@ -72,6 +72,7 @@ class testApp : public ofBaseApp{
         int                 blobsTotal;
         float               blobsTotalFloat;
 		bool				bLearnBakground;
+        float               minBlobSize;
 
 
 };

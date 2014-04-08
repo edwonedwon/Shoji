@@ -26,6 +26,7 @@ void testApp::setup(){
 	threshold = 80;
     blobsTotal = 4;
     blobsTotalFloat = 4;
+    minBlobSize = 5;
     
     // DEBUG GUI SWITCH
     debug = true;
@@ -42,6 +43,7 @@ void testApp::setup(){
     debugGUI->addSpacer();
     debugGUI->addSlider("THRESHOLD", 0.0, 100, &thresholdFloat);
     debugGUI->addSlider("BLOBS", 0.0, 4, &blobsTotalFloat);
+    debugGUI->addSlider("MIN BLOB SIZE", 0.1, 20, &minBlobSize);
     debugGUI->addToggle("FULLSCREEN", false);
     debugGUI->autoSizeToFitWidgets();
     ofAddListener(debugGUI->newGUIEvent, this, &testApp::guiEvent);
@@ -114,34 +116,13 @@ void testApp::mainUpdate()
         
         // find contours which are between the size of 20 pixels and 1/3 the w*h pixels.
         // also, find holes is set to true so we will get interior contours as well....
-        contourFinder.findContours(grayDiff, 20, (340*240)/3, blobsTotal, true);	// find holes
+        contourFinder.findContours(grayDiff, minBlobSize, (340*240)/3, blobsTotal, true);	// find holes
 	}
     
     
     // GUI STUFF
     threshold = (int)thresholdFloat;
     blobsTotal = (int)blobsTotalFloat;
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
                                                 
     updateQuadWarp();
 
