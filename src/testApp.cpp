@@ -138,12 +138,18 @@ void testApp::draw()
 
 void testApp::debugDraw()
 {
+	const int debugWidth = VIDEO_WIDTH >> 1;
+	const int debugHeight = VIDEO_HEIGHT >> 1;
+	const int padding = 10;
+
     // draw the incoming, the grayscale, the bg and the thresholded difference
 	ofSetHexColor(0xffffff);
-	colorImg.draw(20,20);
-	grayImage.draw(360,20);
-	grayBg.draw(20,280);
-	grayDiff.draw(360,280);
+
+	int i = 0;
+	colorImg.draw(padding, padding + (i++) * (padding+debugHeight), debugWidth,debugHeight);
+	grayImage.draw(padding, padding + (i++) * (padding+debugHeight), debugWidth,debugHeight);
+	grayBg.draw(padding, padding + (i++) * (padding+debugHeight), debugWidth,debugHeight);
+	grayDiff.draw(padding, padding + (i++) * (padding+debugHeight), debugWidth,debugHeight);
     
 	// then draw the contours:
     
