@@ -38,8 +38,12 @@ class testApp : public ofBaseApp{
     
 	private:
 		void setupGui();
+		void setupCamera( int a_id );
 
 	private:
+
+		int m_camId;
+		int m_camRequestedId;
 
 		QuadSurface m_quadSurface;
 		ShojiDrawer m_shojiDrawer;
@@ -60,7 +64,6 @@ class testApp : public ofBaseApp{
 		int 				threshold;
         float               thresholdFloat;
         int                 blobsTotal;
-        float               blobsTotalFloat;
 		bool				bLearnBakground;
         float               minBlobSize;
 

@@ -8,10 +8,9 @@ void testApp::setup()
     ofSetVerticalSync( true );
     ofEnableSmoothing();
     
-    vidGrabber.setDeviceID(1);
-    vidGrabber.setVerbose(true);
-    vidGrabber.initGrabber(VIDEO_WIDTH,VIDEO_HEIGHT);
-	vidGrabber.setDesiredFrameRate(SHOJI_FPS);
+	m_camId = 0;
+	m_camRequestedId = m_camId;
+	setupCamera( m_camId );
 
     colorImg.allocate(VIDEO_WIDTH,VIDEO_HEIGHT);
 	grayImage.allocate(VIDEO_WIDTH,VIDEO_HEIGHT);
@@ -21,7 +20,6 @@ void testApp::setup()
 	bLearnBakground = true;
 	threshold = 80;
     blobsTotal = 4;
-    blobsTotalFloat = 4;
     minBlobSize = 5;
     
     // DEBUG GUI SWITCH
@@ -33,19 +31,34 @@ void testApp::setup()
 	m_quadSurface.setup();
 }
 
+void testApp::setupCamera( int a_id )
+{
+	if ( vidGrabber.isInitialized() )
+	{
+		vidGrabber.close();
+	}
+
+	vidGrabber.setDeviceID(a_id);
+    vidGrabber.setVerbose(true);
+	vidGrabber.setDesiredFrameRate(SHOJI_FPS);
+
+    vidGrabber.initGrabber(VIDEO_WIDTH, VIDEO_HEIGHT);
+}
+
 void testApp::setupGui()
 {
 	gui = new ofxUISuperCanvas("DEBUG");
     gui->addToggle("DEBUG", &debug);
     gui->addToggle("INFRARED VIDEO", &showIR);
     gui->addToggle("QUAD", &showQuad);
+	gui->addIntSlider("CAM ID", 0, vidGrabber.listDevices().size()-1, &m_camRequestedId );
     gui->autoSizeToFitWidgets();
     
     // DEBUG GUI
     debugGUI = new ofxUISuperCanvas("BLOBS");
     debugGUI->addSpacer();
     debugGUI->addSlider("THRESHOLD", 0.0, 100, &thresholdFloat);
-    debugGUI->addSlider("BLOBS", 0.0, 4, &blobsTotalFloat);
+	debugGUI->addIntSlider("BLOBS", 0, 4, &blobsTotal);
     debugGUI->addSlider("MIN BLOB SIZE", 0.1, 20, &minBlobSize);
     debugGUI->addToggle("FULLSCREEN", false);
     debugGUI->autoSizeToFitWidgets();
@@ -56,6 +69,12 @@ void testApp::setupGui()
 // UPDATE --------------------------------------------------------------
 void testApp::update()
 {
+	if ( m_camRequestedId != m_camId )
+	{
+		setupCamera( m_camRequestedId );
+		m_camId = m_camRequestedId;
+	}
+
     mainUpdate();
 }
 
@@ -90,7 +109,6 @@ void testApp::mainUpdate()
     
     // GUI STUFF
     threshold = (int)thresholdFloat;
-    blobsTotal = (int)blobsTotalFloat;
 
 	m_quadSurface.update( contourFinder );
 }
