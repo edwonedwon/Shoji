@@ -1,29 +1,23 @@
 #include "testApp.h"
 
+#include "ShojiDefines.h"
+
 void testApp::setup()
 {
-	const int fps = 60;
-	const int video_width = 320;
-	const int video_height = 240;
-
-    ofSetFrameRate( fps );
+    ofSetFrameRate( SHOJI_FPS );
     ofSetVerticalSync( true );
     ofEnableSmoothing();
     
-	#ifdef _USE_LIVE_VIDEO
-        vidGrabber.setDeviceID(1);
-        vidGrabber.setVerbose(true);
-        vidGrabber.initGrabber(video_width,video_height);
-		vidGrabber.setDesiredFrameRate(fps);
-	#else
-        vidPlayer.loadMovie("fingers.mov");
-        vidPlayer.play();
-	#endif
+    vidGrabber.setDeviceID(1);
+    vidGrabber.setVerbose(true);
+    vidGrabber.initGrabber(VIDEO_WIDTH,VIDEO_HEIGHT);
+	vidGrabber.setDesiredFrameRate(SHOJI_FPS);
 
-    colorImg.allocate(video_width,video_height);
-	grayImage.allocate(video_width,video_height);
-	grayBg.allocate(video_width,video_height);
-	grayDiff.allocate(video_width,video_height);
+
+    colorImg.allocate(VIDEO_WIDTH,VIDEO_HEIGHT);
+	grayImage.allocate(VIDEO_WIDTH,VIDEO_HEIGHT);
+	grayBg.allocate(VIDEO_WIDTH,VIDEO_HEIGHT);
+	grayDiff.allocate(VIDEO_WIDTH,VIDEO_HEIGHT);
 
 	bLearnBakground = true;
 	threshold = 80;
@@ -53,6 +47,8 @@ void testApp::setup()
     debugGUI->loadSettings("settings.xml");
 
     setupQuadWarp();
+
+	m_quadSurface.setup();
 }
 
 void testApp::setupQuadWarp()
@@ -88,21 +84,12 @@ void testApp::mainUpdate()
     
     bool bNewFrame = false;
     
-    #ifdef _USE_LIVE_VIDEO
         vidGrabber.update();
         bNewFrame = vidGrabber.isFrameNew();
-    #else
-        vidPlayer.update();
-        bNewFrame = vidPlayer.isFrameNew();
-    #endif
         
-        if (bNewFrame){
-            
-    #ifdef _USE_LIVE_VIDEO
+    if (bNewFrame)
+	{
         colorImg.setFromPixels(vidGrabber.getPixels(), 320,240);
-    #else
-        colorImg.setFromPixels(vidPlayer.getPixels(), 320,240);
-    #endif
         
         grayImage = colorImg;
         if (bLearnBakground == true){
@@ -123,16 +110,16 @@ void testApp::mainUpdate()
     // GUI STUFF
     threshold = (int)thresholdFloat;
     blobsTotal = (int)blobsTotalFloat;
+
+	m_quadSurface.update( contourFinder );
                                                 
     updateQuadWarp();
-
 }
 
 void testApp::updateQuadWarp()
 {
     for( int i=0; i<contourFinder.nBlobs; i++)
     {
-
         ofPoint corner;
         corner.x = ofMap(contourFinder.blobs[i].centroid.x, 0, 320, 0, ofGetWidth());
         corner.y = ofMap(contourFinder.blobs[i].centroid.y, 0, 240, 0, ofGetHeight());
@@ -151,6 +138,8 @@ void testApp::draw()
         debugDraw();
     else
         mainDraw();
+
+	m_quadSurface.draw();
 }
 
 void testApp::mainDraw()

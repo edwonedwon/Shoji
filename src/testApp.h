@@ -5,8 +5,7 @@
 #include "ofxOpenCv.h"
 #include "ofxQuadWarp.h"
 
-#define _USE_LIVE_VIDEO
-
+#include "QuadSurface.h"
 
 //#define _USE_LIVE_VIDEO		// uncomment this to use a live camera
 								// otherwise, we'll use a movie file
@@ -49,12 +48,11 @@ class testApp : public ofBaseApp{
         void drawQuadWarp();
         void updateQuadWarp();
     
+	private:
 
-        #ifdef _USE_LIVE_VIDEO
-		  ofVideoGrabber 		vidGrabber;
-		#else
-		  ofVideoPlayer 		vidPlayer;
-		#endif
+		QuadSurface m_quadSurface;
+
+		ofVideoGrabber 		vidGrabber;
 
         ofxCvColorImage			colorImg;
 
