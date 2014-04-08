@@ -7,9 +7,6 @@
 
 #include "QuadSurface.h"
 
-//#define _USE_LIVE_VIDEO		// uncomment this to use a live camera
-								// otherwise, we'll use a movie file
-
 class testApp : public ofBaseApp{
 
 	public:

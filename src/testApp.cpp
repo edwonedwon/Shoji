@@ -160,8 +160,6 @@ void testApp::debugDraw()
 	ofDrawBitmapString(reportStr.str(), 20, 600);
 }
 
-
-
 // GUI FUNCTIONS -----------------------------------------------
 
 void testApp::exit()
