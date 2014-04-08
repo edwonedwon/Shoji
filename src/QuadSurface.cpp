@@ -99,7 +99,7 @@ void QuadSurface::drawMask()
 {
 	auto centerPos = getCenterPos();
 
-	ofSetColor( 255,0,0, 100);
+	ofSetColor( 255,0,0, 150);
 	ofFill();
 
 	for ( int i = 0; i < SHOJI_NUM_BLOBS; ++i )

@@ -44,6 +44,7 @@ void testApp::setupCamera( int a_id )
 	vidGrabber.setDesiredFrameRate(SHOJI_FPS);
 
     vidGrabber.initGrabber(VIDEO_WIDTH, VIDEO_HEIGHT);
+	bLearnBakground = true;
 }
 
 void testApp::setupGui()
