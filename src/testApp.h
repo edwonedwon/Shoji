@@ -58,6 +58,7 @@ class testApp : public ofBaseApp{
 
         ofxCvContourFinder 	contourFinder;
 
+		bool				m_drawMask;
         bool                debug;
         bool                showIR;
         bool                showQuad;

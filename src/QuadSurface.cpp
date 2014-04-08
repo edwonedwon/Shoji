@@ -20,11 +20,17 @@ void QuadSurface::update( ofxCvContourFinder & a_contour )
 	sortPoints();
 }
 
+float QuadSurface::calcSurfaceArea() const
+{
+	// TODO:
+	return 1.0f;
+}
+
 void QuadSurface::sortPoints()
 {
 	// calculate center, render out radians compared to center
 	float radians[ SHOJI_NUM_BLOBS];
-	const ofVec3f center = GetCenterPos();
+	const ofVec3f center = getCenterPos();
 
 	for( int i = 0; i < SHOJI_NUM_BLOBS; i++)
     {
@@ -46,7 +52,7 @@ void QuadSurface::sortPoints()
     }
 }
 
-ofPoint QuadSurface::GetCenterPos() const
+ofPoint QuadSurface::getCenterPos() const
 {
 	ofPoint pt = ofPoint(0.0f);
 
@@ -67,6 +73,7 @@ void QuadSurface::draw()
 {
 	ofSetColor( 255, 0, 0 );
 	ofFill();
+	ofSetLineWidth(5.0f);
 
 	for ( int i = 0; i < SHOJI_NUM_BLOBS; ++i )
 	{
@@ -83,5 +90,29 @@ void QuadSurface::draw()
 		sprintf( buffer, "[%d] (%d,%d)", i, int(pos.x), int(pos.y) );
 		std::string str_number = buffer;
 		ofDrawBitmapString( str_number,  pos + ofPoint(0.0f,20.0f,0.0f) );
+	}
+
+	ofSetLineWidth(1.0f);
+}
+
+void QuadSurface::drawMask()
+{
+	auto centerPos = getCenterPos();
+
+	ofSetColor( 255,0,0, 100);
+	ofFill();
+
+	for ( int i = 0; i < SHOJI_NUM_BLOBS; ++i )
+	{
+		auto pos_0 = m_pos[i];
+		auto pos_1 = m_pos[(i+1)% SHOJI_NUM_BLOBS];
+		auto dir_0 = pos_0 - centerPos;
+		auto dir_1 = pos_1 - centerPos;
+
+		auto pos_0_out = pos_0 + dir_0 * 10000.0f;
+		auto pos_1_out = pos_1 + dir_1 * 10000.0f;
+
+		ofTriangle( pos_0, pos_1, pos_1_out );
+		ofTriangle( pos_0, pos_1_out , pos_0_out );
 	}
 }

@@ -23,6 +23,7 @@ void testApp::setup()
     minBlobSize = 5;
     
     // DEBUG GUI SWITCH
+	m_drawMask = true;
     debug = true;
     showIR = true;
     
@@ -57,6 +58,7 @@ void testApp::setupGui()
     // DEBUG GUI
     debugGUI = new ofxUISuperCanvas("BLOBS");
     debugGUI->addSpacer();
+	debugGUI->addToggle("Draw Quad Mask", &m_drawMask);
     debugGUI->addSlider("THRESHOLD", 0.0, 100, &thresholdFloat);
 	debugGUI->addIntSlider("BLOBS", 0, 4, &blobsTotal);
     debugGUI->addSlider("MIN BLOB SIZE", 0.1, 20, &minBlobSize);
@@ -121,11 +123,16 @@ void testApp::debugUpdate()
 // DRAW --------------------------------------------------------------
 void testApp::draw()
 {
-    if (debug == true)
-        debugDraw();
-
 	m_shojiDrawer.draw( m_quadSurface );
-	m_quadSurface.draw();
+
+	if (m_drawMask) 
+		m_quadSurface.drawMask();
+
+	if (debug == true)
+	{
+		m_quadSurface.draw();
+		debugDraw();
+	}
 }
 
 void testApp::debugDraw()

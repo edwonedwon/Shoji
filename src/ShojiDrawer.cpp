@@ -19,7 +19,7 @@ void ShojiDrawer::draw( const QuadSurface & a_quadSurface )
 	ofSetLineWidth(20.0f);
 
 	static float offset = 0.0f;
-	float offset_goal = a_quadSurface.GetCenterPos().x*0.001f;
+	float offset_goal = a_quadSurface.getCenterPos().x*0.001f;
 	offset = ofLerp( offset, offset_goal, 0.03f );
 
 	for ( int iLine = 0; iLine < numLines; ++iLine )

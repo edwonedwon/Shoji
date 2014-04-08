@@ -10,12 +10,16 @@ class QuadSurface
 
 		void setup();
 		void draw();
+		void drawMask();
+
 		void update( ofxCvContourFinder & a_contour );
 
-		ofPoint GetCenterPos() const;
-		ofVec3f GetPt( int a_index ) const { return m_pos[a_index]; }
+		ofPoint getCenterPos() const;
+		ofVec3f getPt( int a_index ) const { return m_pos[a_index]; }
 
 	private:
+
+		float calcSurfaceArea() const;
 		void sortPoints();
 
 	private:
