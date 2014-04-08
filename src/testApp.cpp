@@ -1,26 +1,29 @@
 #include "testApp.h"
 
+void testApp::setup()
+{
+	const int fps = 60;
+	const int video_width = 320;
+	const int video_height = 240;
 
-//--------------------------------------------------------------
-void testApp::setup(){
-    
-    ofSetFrameRate( 60 );
+    ofSetFrameRate( fps );
     ofSetVerticalSync( true );
     ofEnableSmoothing();
     
 	#ifdef _USE_LIVE_VIDEO
         vidGrabber.setDeviceID(1);
         vidGrabber.setVerbose(true);
-        vidGrabber.initGrabber(320,240);
+        vidGrabber.initGrabber(video_width,video_height);
+		vidGrabber.setDesiredFrameRate(fps);
 	#else
         vidPlayer.loadMovie("fingers.mov");
         vidPlayer.play();
 	#endif
 
-    colorImg.allocate(320,240);
-	grayImage.allocate(320,240);
-	grayBg.allocate(320,240);
-	grayDiff.allocate(320,240);
+    colorImg.allocate(video_width,video_height);
+	grayImage.allocate(video_width,video_height);
+	grayBg.allocate(video_width,video_height);
+	grayDiff.allocate(video_width,video_height);
 
 	bLearnBakground = true;
 	threshold = 80;
@@ -54,7 +57,6 @@ void testApp::setup(){
 
 void testApp::setupQuadWarp()
 {
-    
     showQuad = true;
     
     img.loadImage( "quad_warp_kittens.png" );
@@ -72,14 +74,12 @@ void testApp::setupQuadWarp()
     warper.setBottomLeftCornerPosition( ofPoint( x, y + h ) );      // this is position of the quad warp corners, centering the image on the screen.
     warper.setBottomRightCornerPosition( ofPoint( x + w, y + h ) ); // this is position of the quad warp corners, centering the image on the screen.
     warper.setup();
-
 }
 
 // UPDATE --------------------------------------------------------------
-void testApp::update(){
-
+void testApp::update()
+{
     mainUpdate();
-    
 }
 
 void testApp::mainUpdate()
@@ -137,55 +137,20 @@ void testApp::updateQuadWarp()
         corner.x = ofMap(contourFinder.blobs[i].centroid.x, 0, 320, 0, ofGetWidth());
         corner.y = ofMap(contourFinder.blobs[i].centroid.y, 0, 240, 0, ofGetHeight());
         warper.setCorner(corner, i);
-
     }
-    
-//
-//    if (contourFinder.nBlobs >= 1)
-//    {
-//        ofPoint topLeft;
-//        topLeft.x = ofMap(contourFinder.blobs[0].centroid.x, 0, 320, 0, ofGetWidth());
-//        topLeft.y = ofMap(contourFinder.blobs[0].centroid.y, 0, 240, 0, ofGetHeight());
-//        warper.setTopLeftCornerPosition(topLeft);
-//    }
-//
-//    if (contourFinder.nBlobs >= 2)
-//    {
-//        ofPoint topRight;
-//        topRight.x = ofMap(contourFinder.blobs[1].centroid.x, 0, 320, 0, ofGetWidth());
-//        topRight.y = ofMap(contourFinder.blobs[1].centroid.y, 0, 240, 0, ofGetHeight());        warper.setTopRightCornerPosition(topRight);
-//    }
-//    
-//    if (contourFinder.nBlobs >= 3)
-//    {
-//        ofPoint bottomLeft;
-//        bottomLeft.x = ofMap(contourFinder.blobs[2].centroid.x, 0, 320, 0, ofGetWidth());
-//        bottomLeft.y = ofMap(contourFinder.blobs[2].centroid.y, 0, 240, 0, ofGetHeight());
-//        warper.setBottomLeftCornerPosition(bottomLeft);
-//    }
-//    
-//    if (contourFinder.nBlobs >= 4)
-//    {
-//        ofPoint bottomRight;
-//        bottomRight.x = ofMap(contourFinder.blobs[3].centroid.x, 0, 320, 0, ofGetWidth());
-//        bottomRight.y = ofMap(contourFinder.blobs[3].centroid.y, 0, 240, 0, ofGetHeight());
-//        warper.setBottomLeftCornerPosition(bottomRight);
-//    }
 }
 
 void testApp::debugUpdate()
 {
-    
 }
 
 // DRAW --------------------------------------------------------------
-void testApp::draw(){
-    
+void testApp::draw()
+{
     if (debug == true)
         debugDraw();
     else
         mainDraw();
-
 }
 
 void testApp::mainDraw()
@@ -216,7 +181,6 @@ void testApp::mainDraw()
     
     if (showQuad)
         drawQuadWarp();
-    
 }
 
 void testApp::drawQuadWarp()
@@ -307,7 +271,6 @@ void testApp::debugDraw()
     //			  << "threshold " << threshold << " (press: +/-)" << endl
     << "num blobs found " << contourFinder.nBlobs << ", fps: " << ofGetFrameRate();
 	ofDrawBitmapString(reportStr.str(), 20, 600);
-    
 }
 
 
@@ -337,8 +300,8 @@ void testApp::guiEvent (ofxUIEventArgs &e)
 // END GUI FUNCTIONS -------------------------------------------
 
 //--------------------------------------------------------------
-void testApp::keyPressed(int key){
-
+void testApp::keyPressed(int key)
+{
 	switch (key){
 		case ' ':
 			bLearnBakground = true;
