@@ -20,10 +20,26 @@ void QuadSurface::update( ofxCvContourFinder & a_contour )
 	sortPoints();
 }
 
+float calcTriArea( ofPoint p0, ofPoint p1, ofPoint p2 )
+{
+	ofPoint dir_0 = p1-p0;
+	ofPoint dir_1 = p2-p0;
+	float len_0 = dir_0.length();
+	float len_1 = dir_1.length();
+
+	float len_mul = len_0 * len_1;
+	if ( len_mul < 0.0001f ) return 0.0f;
+
+	float angle = acosf ( dir_0.dot(dir_1) / len_mul );
+	float area = 0.5f * len_mul * sin(angle);
+
+	return area;
+}
+
 float QuadSurface::calcSurfaceArea() const
 {
-	// TODO:
-	return 1.0f;
+	return	calcTriArea( m_pos[0], m_pos[1], m_pos[2] )
+		+	calcTriArea( m_pos[0], m_pos[2], m_pos[3] );
 }
 
 void QuadSurface::sortPoints()
@@ -90,6 +106,24 @@ void QuadSurface::draw()
 		sprintf( buffer, "[%d] (%d,%d)", i, int(pos.x), int(pos.y) );
 		std::string str_number = buffer;
 		ofDrawBitmapString( str_number,  pos + ofPoint(0.0f,20.0f,0.0f) );
+	}
+
+	// center
+	{
+		char buffer[64];
+		auto center = getCenterPos();
+		auto surfArea = calcSurfaceArea();
+
+		ofSetColor( 255, 0, 0 );
+		ofCircle( center, 10.0f );
+
+		sprintf( buffer, "Center (%d,%d)", int(center.x), int(center.y) );
+		std::string str_number = buffer;
+		ofDrawBitmapString( str_number,  center + ofPoint(15.0f, 0.0f, 0.0f ) );
+
+		sprintf( buffer, "Surface Area: %f", surfArea );
+		str_number = buffer;
+		ofDrawBitmapString( str_number,  center + ofPoint(0.0f, 15.0f, 0.0f ) );
 	}
 
 	ofSetLineWidth(1.0f);
