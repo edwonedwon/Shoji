@@ -14,12 +14,12 @@ class QuadSurface
 
 		void update( ofxCvContourFinder & a_contour );
 
+		float calcSurfaceArea() const;
 		ofPoint getCenterPos() const;
 		ofVec3f getPt( int a_index ) const { return m_pos[a_index]; }
 
 	private:
-
-		float calcSurfaceArea() const;
+		
 		void sortPoints();
 
 	private:

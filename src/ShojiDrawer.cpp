@@ -18,9 +18,10 @@ void ShojiDrawer::draw( const QuadSurface & a_quadSurface )
 	ofSetColor( 100 );
 	ofSetLineWidth(20.0f);
 
+	// perlin offset
 	static float offset = 0.0f;
 	float offset_goal = a_quadSurface.getCenterPos().x*0.001f;
-	offset = ofLerp( offset, offset_goal, 0.03f );
+	offset = ofLerp( offset, offset_goal, 0.1f );
 
 	for ( int iLine = 0; iLine < numLines; ++iLine )
 	{

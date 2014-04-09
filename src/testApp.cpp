@@ -8,7 +8,7 @@ void testApp::setup()
     ofSetVerticalSync( true );
     ofEnableSmoothing();
     
-	m_camId = 0;
+	m_camId = VIDEO_DEFAULT_CAM_ID;
 	m_camRequestedId = m_camId;
 	setupCamera( m_camId );
 
